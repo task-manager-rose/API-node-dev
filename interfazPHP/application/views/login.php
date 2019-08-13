@@ -24,8 +24,6 @@
         </div>
       </div>
     </form>
-    <a href="#">Olvide mi clave</a><br>
-    <a href="register.html" class="text-center">Registrarse</a>
   </div>
 </div>
 <script src="<?php echo base_url('resources');?>/bower_components/jquery/dist/jquery.min.js"></script>
