@@ -79,9 +79,28 @@
           <h4 class="modal-title"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;User information&nbsp;&nbsp;<i id="success_save_user" class='fa fa-check-circle-o' style='color:green; display:none;' aria-hidden='true'></i></h4>
         </div>
         <div class="modal-body">
-          <div class="col-md-6 form-group">
-            
-          </div>
+        <form id="userData">
+          <div class="row">
+              <div class="col-md-5 form-group">
+                <label>Name</label>
+                <input type="text" class="form-control" name="name" id="uName">
+              </div>
+              <div class="col-md-2 form-group">
+                <label>Age</label>
+                <input type="text" name="age" class="form-control" id="uAge">
+              </div>
+              <div class="col-md-5 form-group">
+                <label>Email</label>
+                <input type="text" class="form-control" name="email" id="uEmail">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-5 form-group">
+                <label>Password</label>
+                <input type="password" name="password" class="form-control" id="uPass">
+                </div>
+            </div>
+            </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -137,20 +156,56 @@
       $.ajax({
         method: "POST",
         url: "<?php echo site_url('ajax_process/getUserInfo')?>",
-        data: {description},
+        data: {},
       }).done(function( msg ){
-          console.log(msg);
-          r = JSON.parse( msg );
-          if( r.code == 400 ){
-            alert('Unable to get User information')
-          }
-         /*$("#success_save_new_task").fadeIn();
+          r3 = JSON.parse( msg );
+          if( r3.code == 400 ){ alert('Unable to get User information') }
+          d3 = JSON.parse( r3.result );
+          $("#uName").val(d3.name);
+          $("#uAge").val(d3.age);
+          $("#uEmail").val(d3.email);
+          $("#savePerilUsuario").click(function(){
+            $.ajax({
+                method: "POST",
+                url: "<?php echo site_url('ajax_process/updateUser')?>",
+                data: $("#userData").serialize(),
+                beforeSend : function(){$("#saveUserProfile_loader").fadeIn();}
+              }).done(function( msg4 ){
+                $("#saveUserProfile_loader").fadeOut();
+                r4 = JSON.parse( msg4 );
+                if( r4.code == 400 ){ alert('Unable to get User information') }
+                $("#success_save_user").fadeIn();
+                d4 = JSON.parse( r4.result );
+                $("#uName").val(d4.name);
+                $("#uAge").val(d4.age);
+                $("#uEmail").val(d4.email);
+                setTimeout(() => { $("#success_save_user").fadeOut();}, 3000 );
+              })
+          })
+         /*
          setTimeout(() => { $("#success_save_new_task").fadeOut();$("#newTaskDescription").val('');}, 1000 );
          setTimeout(() => { $("#createTaskMdodal").modal('hide');}, 1500 );
          setTimeout(() => { loadTasks();}, 1600 );*/
       });
     });
   });
+  function deleteTask(task){
+    var ensure = confirm('Desea eliminar esta tarea?');
+    if(ensure){
+      $.ajax({
+          method: "POST",
+          url: "<?php echo site_url('ajax_process/deleteTask')?>",
+          data: {task},
+        }).done(function( msg5 ){
+          r5 = JSON.parse( msg5 );
+          if( r5.code == 404 ){
+            return alert('Unable to delete task');
+          }
+          alert('Task deleted');
+          loadTasks();
+        });
+    }
+  }
   function crearNewTask(){
     var description = $("#newTaskDescription").val();
       $.ajax({
@@ -174,7 +229,7 @@
     $.ajax({
         method: "POST",
         url: "<?php echo site_url('ajax_process/getTasks')?>",
-        data: $("#login_form").serialize(),
+        data: {},
         beforeSend : function(){$("#loader_task").fadeIn();}
       }).done(function( msg ){
          $("#loader_task").fadeOut();

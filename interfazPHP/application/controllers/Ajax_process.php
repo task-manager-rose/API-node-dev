@@ -45,13 +45,18 @@ class Ajax_process extends CI_Controller
             $html = "";
             foreach($taskj as $k => $v){
                 $html.= "<tr><td>".$v->description."</td><td>".($v->completed==false?"<i class='fa fa-times-circle-o' style='color:red' aria-hidden='true'></i>":"<i class='fa fa-check-circle-o' style='color:green' aria-hidden='true'></i>")."</td>";
-                $html.= "<td><a href='#' onclick=\"editTask('".$v->_id."')\"><i class='fa fa-pencil-square-o' aria-hidden='true'></i></a></td>";
+                $html.= "<td><a href='#' onclick=\"editTask('".$v->_id."')\"><i class='fa fa-pencil-square-o' aria-hidden='true'></i></a>&nbsp;&nbsp;&nbsp;";
+                $html.= "<a href='#' onclick=\"deleteTask('".$v->_id."')\"><i class='fa fa-trash' style='color:red' aria-hidden='true'></i></a></td>";
                 $html.= "</tr>";
             }
         }
         $tasks['result'] = $html;
         echo json_encode($tasks);
     }
+    
+    
+
+
     public function getTask(){
 
         if(!isset($_SESSION['token']) and strlen($this->session->userdata('token'))<8){
@@ -89,6 +94,20 @@ class Ajax_process extends CI_Controller
         echo json_encode($tasks);
     }
 
+    public function updateUser(){
+        if(!isset($_SESSION['token']) and strlen($this->session->userdata('token'))<8){
+            $this->session->sess_destroy();
+            $this->session->flashdata(array('message'=>'Session invalida'));
+            redirect('inicio');  
+        }
+        $data = array('name'=>$_POST['name'],'age'=>$_POST['age'],'email'=>$_POST['email']);
+        if(isset($_POST['password']) and strlen($_POST['password'])>4){
+            $data['password'] = $_POST['password'];
+        }
+        $upUser = $this->CallAPI('PATCH', $this->api.'users/profile', $data,$_SESSION['token']);    
+        echo json_encode($upUser);
+    }
+
     public function getUserInfo(){
         if(!isset($_SESSION['token']) and strlen($this->session->userdata('token'))<8){
             $this->session->sess_destroy();
@@ -96,8 +115,19 @@ class Ajax_process extends CI_Controller
             redirect('inicio');  
         }
         
-        $tasks = $this->CallAPI('GET', $this->api.'users', false,$_SESSION['token']);    
-        echo json_encode($tasks);
+        $user = $this->CallAPI('GET', $this->api.'users/profile', false,$_SESSION['token']);    
+        echo json_encode($user);
+    }
+
+    public function deleteTask(){
+        if(!isset($_SESSION['token']) and strlen($this->session->userdata('token'))<8){
+            $this->session->sess_destroy();
+            $this->session->flashdata(array('message'=>'Session invalida'));
+            redirect('inicio');  
+        }
+        
+        $deleted = $this->CallAPI('delete', $this->api.'task/del/'.$_POST['task'], false,$_SESSION['token']);
+        echo json_encode($deleted);
     }
 
     public function CallAPI($method, $url, $data = false, $authorization=false)
@@ -114,6 +144,13 @@ class Ajax_process extends CI_Controller
                 break;
             case "PUT":
                 curl_setopt($curl, CURLOPT_PUT, 1);
+                break;
+            case "delete":
+                
+                curl_setopt($curl, CURLOPT_CUSTOMREQUEST, strtoupper('delete'));
+                if ($data){
+                    curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
+                }
                 break;
             case "PATCH":
                 curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'PATCH');
