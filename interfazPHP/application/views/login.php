@@ -1,7 +1,4 @@
 <?php echo $head;?>
-<style>
-	.login-page{background-image: url('<?php echo base_url('images/One-Minute-Chores.png');?>');background-position: center;background-repeat: no-repeat;background-size: cover;}
-</style>
 <body class="hold-transition login-page">
 <div class="login-box">
   <div class="login-logo">
