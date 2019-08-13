@@ -11,6 +11,8 @@ html {
 
 body {
   height: 100%;
+  font-family: 'open sans', helvetica, arial, sans;
+  background-color: #576C91;
 }
 
 #wrapper {
