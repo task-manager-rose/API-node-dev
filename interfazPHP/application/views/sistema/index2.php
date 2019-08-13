@@ -1,8 +1,5 @@
 <?php echo $head;?>
 <body class="hold-transition skin-green sidebar-mini">
-<style>
-	body {padding: 0;font-family: 'Oxygen', Arial, Helvetica, 'Nimbus Sans L', sans-serif;font-size: 14px;}#calendar {max-width: 900px;margin: 0 auto;}#cargador{position: absolute;height: 100px;width: 100px;top: 50%;left: 50%;margin-left: -50px;margin-top: -50px;}#cargador_holder{width: 100%;min-height: 100vh;position: absolute;background-color: rgba(136, 131, 131, 0.4196078431372549);z-index: 1000;}
-</style>
 <div class="wrapper">
   <?php echo $header;?>
   <div class="content-wrapper">
@@ -13,11 +10,6 @@
 					</ol>
 				</section>
     <!-- Main content -->
-    <style>
-      .loader{ width: 100%; position: absolute;height: 100%;background-color: rgba(180,180,180,0.4);z-index: 10;}
-      .loaderic {margin: 10% 48%;position: relative;}
-      .fa-pencil-square-o{cursor:pointer;}
-    </style>
     <section class="content">
       <div class="row">
         <section class="col-lg-12 connectedSortable">
@@ -35,7 +27,7 @@
             <div class="box-body calendarHolder">
               
               <table class="table">
-                <thead><tr><th>Decription</th><th>Completed</th><th>Options</th></tr></thead>
+                <thead><tr><th>Decription</th><th>Status</th><th>Options</th></tr></thead>
                 <tbody id="tableBody"> 
                 </tbody>
               </table>
@@ -124,8 +116,8 @@
             <input type="hidden" id="taskId">
           </div>
           <div class="col-md-6 form-group">
-            <input type="radio" name="completed" id="completedTrue" value="true"> COMPLETED <br>
-            <input type="radio" name="completed" id="completedFalse" value="false"> PENDING
+            <input type="radio" name="completed" id="completedTrue" value="true"> Done <br>
+            <input type="radio" name="completed" id="completedFalse" value="false"> To do
           </div>
         </div>
         <div class="modal-footer">
